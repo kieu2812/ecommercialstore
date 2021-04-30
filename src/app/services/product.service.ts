@@ -9,36 +9,73 @@ import { ProductCategory } from '../common/product-category';
 })
 export class ProductService {
  
+ 
 
-  private baseUrl="http://localhost:8080/api/products";
-  private categoryUrl = "http://localhost:8080/api/product-category";
+  private baseUrl: string ="http://localhost:8080/api/products";
+  private categoryUrl : string = "http://localhost:8080/api/product-category";
+  
 
   constructor(private httpClient: HttpClient) { }
 
   getProducts(categoryId: number): Observable<Product[]>{
 
     const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
-    return this.httpClient.get<GetResponseProduct>(searchUrl).pipe(
-      map( response => response._embedded.product)
-    )
+    return this.callGetProducts(searchUrl);
+  }
+  getProductsPaginate(thePage:number,
+                      thePageSize: number,
+                      categoryId: number){
+
+    const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`
+                        + `&page=${thePage}&size=${thePageSize}`;
+    console.log(searchUrl);
+    return this.httpClient.get(searchUrl);
   }
 
   getProductCategories(): Observable<ProductCategory[]>{
 
     return this.httpClient.get<GetResponseProductCategory>(this.categoryUrl).pipe(
-      map( response => response._embedded.productCategories)
+      map( response => response._embedded.productCategory)
     )
 
   }
+
+  searchProducts(theKeyWord: string) : Observable<Product[]>{
+    const searchUrl  = `${this.baseUrl}/search/findByNameContaining?name=${theKeyWord}`;
+    return this.callGetProducts(searchUrl);
+  }
+
+  private callGetProducts(searchUrl: string): Observable<Product[]> {
+    return this.httpClient.get<GetResponseProduct>(searchUrl).pipe(
+      map(response => response._embedded.product)
+    );
+  }
+
+  private callGetProductsPaginate(searchUrl: string) {
+    return this.httpClient.get<GetResponseProduct>(searchUrl);
+  }
+  getProductById(theProductId: number): Observable<Product> {
+    const productDetailUrl= `${this.baseUrl}/${theProductId}`;
+    console.log(productDetailUrl);
+    return this.httpClient.get<Product>(productDetailUrl);
+  }
+  
 }
 
 interface GetResponseProduct{
   _embedded:{
     product: Product[];
+  },
+  page:{
+    size: number,
+    totalElements: number,
+    totalPages: number,
+    number:  number
   }
+
 }
 interface GetResponseProductCategory{
   _embedded:{
-    productCategories: ProductCategory[];
+    productCategory: ProductCategory[];
   }
 }

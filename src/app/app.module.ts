@@ -9,12 +9,16 @@ import { HttpClientModule} from '@angular/common/http';
 import { ProductService } from './services/product.service';
 import { CommonModule } from '@angular/common';
 import { ProductCategoryMenuComponent } from './components/product-category-menu/product-category-menu.component';
+import { SearchComponent } from './components/search/search.component';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProductListComponent,
-    ProductCategoryMenuComponent
+    ProductCategoryMenuComponent,
+    SearchComponent,
+    ProductDetailComponent
   ],
   imports: [
     BrowserModule,
