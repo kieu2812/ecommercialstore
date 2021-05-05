@@ -1035,4 +1035,7 @@ footer ul li{
         border:0;
         padding:8px 0
     }
+    .main-content.page-m{
+        padding: 10% 30% 10% 5%;
+    }
 }

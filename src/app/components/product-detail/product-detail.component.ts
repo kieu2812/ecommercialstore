@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CartItem } from 'src/app/common/cart-item';
 import { Product } from 'src/app/common/product';
+import { CartService } from 'src/app/services/cart.service';
 import { ProductService } from 'src/app/services/product.service';
 import { symbolName } from 'typescript';
 
@@ -13,6 +15,7 @@ export class ProductDetailComponent implements OnInit {
 
   product: Product= new Product();
   constructor(private productService: ProductService,
+      private cartService: CartService,
       private route: ActivatedRoute){
 
   }
@@ -34,4 +37,9 @@ export class ProductDetailComponent implements OnInit {
     console.log(this.product);
   }
 
+  addToCart(){
+    console.log(`Adding to cart: ${this.product.name}, unitPric: ${this.product.unitPrice}`);
+    const theCartItem = new CartItem(this.product);
+    this.cartService.addToCart(theCartItem);
+  }
 }

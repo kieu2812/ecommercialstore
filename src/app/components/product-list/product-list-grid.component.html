@@ -14,7 +14,7 @@
 
                         <h1>{{ tempProduct.name }}</h1>
                         <div class="price">{{ tempProduct.unitPrice | currency:'USD' }}</div>
-                        <a href="#" class="primary-btn">Add to cart</a>
+                        <button (click) = "addToCart(tempProduct)" class="btn btn-primary btn-sm">Add to cart</button>
                     </div>
 
                 </div>
@@ -35,9 +35,21 @@
                                 <ngb-pagination [(page)]="thePageNumber"
                                                 [pageSize]="thePageSize"
                                                 [collectionSize]="theTotalElements"
-                                                (pageChange)="listProducts()">
+                                                (pageChange)="listProducts()"
+                                                [maxSize]=5
+                                                [boundaryLinks]="true">
 
                                 </ngb-pagination>
+                            </div>
+                            <div class="col-md-3 mt-2" style="text-align: right;">
+                                <span class="mr-2">Page size</span>
+                                <select (change)="updatePageSize($event.target.value)" >
+                                    <option>2</option>
+                                    <option selected="true">5</option>
+                                    <option>10</option>
+                                    <option>15</option>
+                                    <option>20</option>
+                                </select>
                             </div>
                         </div>
                     </div>

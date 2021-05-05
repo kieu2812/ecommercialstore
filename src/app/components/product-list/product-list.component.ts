@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CartItem } from 'src/app/common/cart-item';
 import { Product } from 'src/app/common/product';
+import { CartService } from 'src/app/services/cart.service';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -20,8 +22,10 @@ export class ProductListComponent implements OnInit {
   //new properties for pagination
   thePageNumber: number=1;
   theTotalElements:number =0;
-  thePageSize: number=10;
+  thePageSize: number=5;
+  previousKeyword: string =null;
   constructor( private productService: ProductService,
+              private cartService: CartService,
               private route: ActivatedRoute) { 
 
   }
@@ -44,11 +48,21 @@ export class ProductListComponent implements OnInit {
   handleSearchProduct() {
     const theKeyWord:string =  this.route.snapshot.paramMap.get('keyword');
 
-    this.productService.searchProducts(theKeyWord).subscribe(
-      data => {
-        this.productList= data;
-      }
-    );
+    if(this.previousKeyword!=theKeyWord){
+      this.thePageNumber=1;
+    }
+    this.previousKeyword = theKeyWord;
+    console.log(`Keyword=${theKeyWord}, thePageNumber=${this.thePageNumber}`);
+    // this.productService.searchProducts(theKeyWord).subscribe(
+    //   data => {
+    //     this.productList= data;
+    //   }
+    // );
+    this.productService.searchProductsPaginate(theKeyWord,
+                                              this.thePageNumber,
+                                              this.thePageSize)
+                                              .subscribe(this.processResult())                                  
+      
   }
 
   handleListProduct(){
@@ -74,6 +88,7 @@ export class ProductListComponent implements OnInit {
     //   }
     // );
 
+
     this.productService.getProductsPaginate(
           this.thePageNumber-1,
           this.thePageSize,
@@ -84,12 +99,24 @@ export class ProductListComponent implements OnInit {
     console.log(this.thePageSize);
     console.log(this.theTotalElements);
   }
-  processResult(){
+  private processResult(){
     return data =>{
       this.productList = data._embedded.product;
       this.thePageNumber =  data.page.number+1;
       this.thePageSize = data.page.size;
       this.theTotalElements = data.page.totalElements;
     }
+  }
+
+  updatePageSize(pageSize: number){
+    this.thePageSize= pageSize;
+    this.thePageNumber=1;
+    this.listProducts();
+  }
+
+  addToCart(product: Product){
+    console.log(product);
+    const theCartItem = new CartItem(product);
+    this.cartService.addToCart(theCartItem);
   }
 }
