@@ -165,8 +165,8 @@
             
                     <div class="col-md-2"> <label> Expire Month</label></div>
                     <div class="col-md-9">
-                        <select formControlName="expireMonth">
-                            <option>TO DO</option>
+                        <select formControlName="expireMonth" >
+                            <option *ngFor="let months of creditCardMonths">{{months}}</option>
                         </select>                    
                     </div>
 
@@ -174,8 +174,8 @@
                     <div class="col-md-2"> <label> Expire Year</label></div>
                     <div class="col-md-9">
                         <div class="input-space">
-                            <select formControlName="expireYear">
-                                <option>TO DO</option>
+                            <select formControlName="expireYear"  (change)="changeExpireYear($event)">
+                                <option *ngFor="let years of creditCardYears">{{years}}</option>
                             </select>
                         </div>                     
                     </div>
