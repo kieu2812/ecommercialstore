@@ -1,3 +1,4 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Country } from 'src/app/common/country';
@@ -90,9 +91,11 @@ export class CheckoutComponent implements OnInit {
       if(event.target.checked){
         this.checkoutFormGroup.controls.billingAddress
             .setValue(this.checkoutFormGroup.controls.shippingAddress.value);
+        this.billingStates=this.shippingStates;
       }
       else{
         this.checkoutFormGroup.controls.billingAddress.reset();
+        this.billingStates=[];
       }
   }
 
