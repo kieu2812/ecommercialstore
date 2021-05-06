@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Country } from 'src/app/common/country';
+import { State } from 'src/app/common/state';
 import { MystoreFormService } from '../../services/mystore-form.service';
 
 @Component({
@@ -14,6 +16,10 @@ export class CheckoutComponent implements OnInit {
   totalPrice: number =0;
   creditCardMonths: number[] =[];
   creditCardYears: number[] = [];
+  countries: Country[]=[];
+  shippingStates: State[] = [];
+  billingStates: State[] = [];
+
   constructor(private formBuilder: FormBuilder, private myStoreFormService: MystoreFormService) { }
 
   ngOnInit(): void {
@@ -58,7 +64,7 @@ export class CheckoutComponent implements OnInit {
         console.log(error);
       })
     );
-    
+    // loading expire year
     this.myStoreFormService.getYearForExpireYear().subscribe(
       (data =>{
         console.log("creditcard year: "+ JSON.stringify(data));
@@ -70,6 +76,8 @@ export class CheckoutComponent implements OnInit {
 
       })
     )
+    // loading countries and states
+    this.loadCountries();
   }
 
   onSubmit(){
@@ -122,4 +130,42 @@ export class CheckoutComponent implements OnInit {
       );
     }
   }
+
+  loadCountries(){
+    this.myStoreFormService.getAllCountries()
+            .subscribe(
+              (data => {
+                this.countries = data;
+                console.log("Countries: ", JSON.stringify(data))
+              } ),
+              (error => {
+                console.log("Error when loading countries. Error: ", error);
+              })
+            );
+
+    
+  //  this.changeCountry(this.countries[0].code);
+    
+  }
+
+  changeCountry(formGroupName: string){
+    const formGroup =  this.checkoutFormGroup.get(formGroupName);
+    const countryCode =  formGroup.value.country.code;
+    this.myStoreFormService.searchStatesByCountry(countryCode)
+    .subscribe(
+      (data =>{ 
+          if(formGroupName=='shippingAddress'){
+              this.shippingStates = data ;
+          }else{
+            this.billingStates = data ;
+          }
+          console.log("States: ", JSON.stringify(data))
+
+        }),
+      (error => {
+        console.log("Error when loading states. Error: ", error);
+      })
+    );
+  }
+
 }

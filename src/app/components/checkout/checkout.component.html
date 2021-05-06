@@ -37,8 +37,8 @@
                     <div class="col-md-2"> <label> Country</label></div>
                     <div class="col-md-9">
                         <div class="input-space">
-                            <select formControlName="country" >
-                                <option> WILL DO LATER</option>
+                            <select formControlName="country"  (change)="changeCountry('shippingAddress')" >
+                                <option  *ngFor="let country of countries" [ngValue]="country">{{country.name}}</option>
                             </select>
                         </div>                     
                     </div>
@@ -61,7 +61,7 @@
                     <div class="col-md-9">
                         <div class="input-space">
                             <select formControlName="state" >
-                                <option>WILL DO LATER</option>
+                                <option *ngFor="let tempState of shippingStates" >{{tempState.name}}</option>
                             </select>
                         </div>                     
                     </div>
@@ -89,8 +89,8 @@
                     <div class="col-md-2"> <label> Country</label></div>
                     <div class="col-md-9">
                         <div class="input-space">
-                            <select formControlName="country" >
-                                <option> WILL DO LATER</option>
+                            <select formControlName="country"  (change)="changeCountry('billingAddress')" >
+                                <option *ngFor="let country of countries" [ngValue]="country"> {{country.name}}</option>
                             </select>
                         </div>                     
                     </div>
@@ -112,8 +112,8 @@
                     <div class="col-md-2"> <label> State</label></div>
                     <div class="col-md-9">
                         <div class="input-space">
-                            <select formControlName="state" >
-                                <option>WILL DO LATER</option>
+                            <select formControlName="state"  >
+                                <option *ngFor="let state of billingStates"> {{state.name}}</option>
                             </select>
                         </div>                     
                     </div>
